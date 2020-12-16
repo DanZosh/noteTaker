@@ -1,6 +1,6 @@
 const path = require("path");
 
-const paths = function(app){
+module.exports {
 //PATH LINKS
 //PATH to index homepage
 app.get("/", function(req, res) {
@@ -18,4 +18,3 @@ app.get("/notes", function(req, res) {
 });
 }
 
-module.exports = paths
