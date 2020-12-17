@@ -19,15 +19,9 @@ app.use(express.static("./app/public"))
 // //PATHS 
 
 //PATH htmls
-//PATH to index.html 
-app.get("/", function(req, res) {
-    //sending a get request to my server to get something at '/'
-    // res.send("hello world!");
-    res.sendFile(path.join(__dirname, "./app/public/index.html"));
-    //and i send back an html file
-});
 
-// PATH to notes.html 
+
+// RETURN the contents at `notes.html `
 const notes = app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "./app/public/notes.html"));
 });
@@ -77,7 +71,13 @@ app.post("/api/notes", function (req, res) {
 //     req.params.boop
 //for loop here
 
-
+//PATH to index.html 
+app.get("*", function(req, res) {
+    //sending a get request to my server to get something at '/'. And i send back an html file
+    // RETURN the contents at `index.html`
+    res.sendFile(path.join(__dirname, "./app/public/index.html"));
+    //
+});
 
 
 app.listen(PORT, function() {
