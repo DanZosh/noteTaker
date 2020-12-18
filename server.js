@@ -3,7 +3,10 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const { restart } = require("nodemon");
+// const { restart } = require("nodemon");
+const { v4: uuidv4 } = require('uuid'); 
+    console.log("test")
+    console.log("uuid: " + uuidv4());
 
 // Sets up the Express App
 // ============================
@@ -34,20 +37,37 @@ const notes = app.get("/notes", function(req, res) {
 const notesData = require('./app/data/db/db.json')
     console.log(notesData)
 
-  // Displays all notes
+// Displays all notes
 // In the browser im the client. I send a request to the server via the search bar to get the function stored at the location "api/notes"
 app.get("/api/notes", function (req, res) {
-    // console.log(notes)
+
+    //use the fs module to read the file
+    //then parse the file contents wiht JSON.parse to get the real data 
+    //send the parsed data back to the client with res.json()
     return res.json(notesData);
 });
 
 //POST the note from the client to the server. The server should save that post in the db.json; and then return it to the client 
 app.post("/api/notes", function (req, res) {
+    //post is used for creating new things
+    //Access the POSTed data in `req.body`
+    //Use the fs module to read the file
+    //THEN parse the file contents with JSON.parse() to the real data
+    //Push the req.body to the array lst
+    //JSON.stringify() the array list back into a JSON string
+    //THEN save the contents back to the `db.JSON` with the `fs` module
 
+    
     // req.body hosts is equal to the JSON post sent from the user
     // This works because of our body parsing middleware
     //the client is posting to the server
+    
     let newNote = req.body;
+//add a unique id to the newNote
+    let idVariable = uuidv4();
+    newNote["id"] = idVariable;
+    console.log(newNote);
+
     //insert my new note into my "database" array
     notesData.push(newNote)
     //now i need to re-save the updated `notesData` with my `newNote` to my db.json
@@ -66,12 +86,24 @@ app.post("/api/notes", function (req, res) {
 }
 );
 
-// app.delete("/api/notes/:boop", function (req, res) {
-//     // this accesses what is sent up
-//     req.params.boop
-//for loop here
+// app.delete("/api/notes/:id", function (req, res) {
+//     //Access the :id from  `req.params.id`
+//     //Use the fs module to read the file
+//     //THEN parse the file contents with JSON.parse() to the real data
+//     // Option A
+//         // Then find the matching index using Array.findIndex()
+//         //Remove the target element using Array.splice()
+//     //Option B
+//         //Use the Array.filter() method to filter out the matching element
+//         // myArray = myArray.filter(({id}) => id !== req.params.id);
+//         //Return any kind of success message.
+//     const noteID = req.params.id;
+    
+//     console.log(noteID)
+// // for loop here
+// }
 
-//PATH to index.html 
+// PATH to index.html 
 app.get("*", function(req, res) {
     //sending a get request to my server to get something at '/'. And i send back an html file
     // RETURN the contents at `index.html`
