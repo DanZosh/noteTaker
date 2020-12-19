@@ -5,8 +5,8 @@ const path = require("path");
 const fs = require("fs");
 // const { restart } = require("nodemon");
 const { v4: uuidv4 } = require('uuid'); 
-    console.log("test")
-    console.log("uuid: " + uuidv4());
+    // console.log("test")
+    // console.log("uuid: " + uuidv4());
 
 // Sets up the Express App
 // ============================
@@ -34,7 +34,7 @@ const notes = app.get("/notes", function(req, res) {
 //PATH data
 //GET the notes that exist in the db
 //Loading the data into memory as a javascript variable
-const notesData = require('./app/data/db/db.json')
+let notesData = require('./app/data/db/db.json')
     console.log(notesData)
 
 // Displays all notes
@@ -86,22 +86,84 @@ app.post("/api/notes", function (req, res) {
 }
 );
 
-// app.delete("/api/notes/:id", function (req, res) {
-//     //Access the :id from  `req.params.id`
-//     //Use the fs module to read the file
-//     //THEN parse the file contents with JSON.parse() to the real data
-//     // Option A
-//         // Then find the matching index using Array.findIndex()
-//         //Remove the target element using Array.splice()
-//     //Option B
-//         //Use the Array.filter() method to filter out the matching element
-//         // myArray = myArray.filter(({id}) => id !== req.params.id);
-//         //Return any kind of success message.
-//     const noteID = req.params.id;
-    
-//     console.log(noteID)
-// // for loop here
-// }
+app.delete("/api/notes/:id", function (req, res) {
+    console.log(req.params.id)
+    //Access the :id from  `req.params.id`
+    //Use the fs module to read the file
+    //THEN parse the file contents with JSON.parse() to the real data
+    // Option A
+        // Then find the matching index using Array.findIndex()
+        //Remove the target element using Array.splice()
+    //Option B
+        //Use the Array.filter() method to filter out the matching element
+        // myArray = myArray.filter(({id}) => id !== req.params.id);
+            let noteID = req.params.id;
+            notesData = notesData.filter(({id}) => id !==noteID
+        )
+        //Return any kind of success message.
+
+    // console.log(noteID)
+    // console.log(req.params)
+    // console.log(req.params.id)
+    //for each object in the array
+
+    //if the object.id = `noteID`
+
+    //empty the object
+
+    // var newNotesArray = [];
+    // console.log("new notes array= " + newNotesArray)
+
+    // for (let i = 0; i < notesData.length; i++) {
+    //     const element = notesData[i];
+    //     let newNotesArray = []
+    //     console.log("this is element" + `${i}` + element)
+    //     console.log("element.id= " + element.id)
+    //     console.log("noteID= " + noteID)
+    //     if(noteID !== element){
+    //         newNotesArray.push(element)   
+    //     }
+ 
+
+    // }
+
+
+    // let newNotesData = notesData.filter(element => {
+    //     // console.log(element.id);
+    //     noteID === element.id
+        
+    // })
+    // console.log(notesData)
+    // console.log(newNotesData)
+
+    // uuidv4()
+
+
+    // for loop here
+    // for (let i = 0; i < notesData.length; i++) {
+    //     const element = notesData[i];
+    //         console.log(element)
+    //     if(noteID === element.id){
+    //         console.log(noteID)
+    //         console.log(element.id)
+    //         let newNotesData = notesData.filter(element)
+                
+        //     fs.writeFile("./app/data/db/db.json",JSON.stringify(newNotesData),(err)=>
+        //     { 
+        //         if (err) {
+        //             console.log(err)
+        //         }else{ 
+        //             console.log("File written successfully\n"); 
+        //             res.json(notesData)
+        //         }
+        //     })
+
+            res.json({success:true});
+        // })
+        
+//     }
+
+});
 
 // PATH to index.html 
 app.get("*", function(req, res) {
