@@ -24,26 +24,34 @@ app.use(express.static("./app/public"))
 //PATH htmls
 
 
-// RETURN the contents at `notes.html `
-const notes = app.get("/notes", function(req, res) {
-    res.sendFile(path.join(__dirname, "./app/public/notes.html"));
-});
+
 
 
 
 //PATH data
-//GET the notes that exist in the db
-//Loading the data into memory as a javascript variable
-let notesData = require('./app/data/db/db.json')
-    console.log(notesData)
 
-// Displays all notes
+// //START GET REQUEST METHOD 1
+// //get the notes that exist in the db
+// //Loading the data into memory as a javascript variable
+// let notesData = require('./app/data/db/db.json')
+//     console.log(notesData)
 
+// // Displays all notes
+
+// app.get("/api/notes", function (req, res) {
+//     return res.json(notesData);
+// });
+// //END GET REQUEST METHOD 1
+
+//GET REQUEST METHOD 2
 app.get("/api/notes", function (req, res) {
-    return res.json(notesData);
+    let notesDB = fs.readFileSync('./app/data/db/db.json');
+    let notesData = JSON.parse(notesDB);
+    // console.log(notesData);
+    res.json(notesData)
 });
 
-
+//POST request
 app.post("/api/notes", function (req, res) {
 
     let newNote = req.body;
@@ -70,13 +78,21 @@ app.post("/api/notes", function (req, res) {
 }
 );
 
+
+
+
+//DELETE request
 app.delete("/api/notes/:id", function (req, res) {
     console.log(req.params.id)
 
         //Use the Array.filter() method to filter out the matching element
         // myArray = myArray.filter(({id}) => id !== req.params.id);
             let noteID = req.params.id;
-            notesData = notesData.filter(({id}) => id !==noteID
+        //     notesData = notesData.filter(
+        //         ({id}) => id !==noteID
+        // )
+            notesData = notesData.filter(
+                ({id}) => id !==noteID
         )
         //Return any kind of success message.
         // res.json({success:true});
@@ -86,6 +102,11 @@ app.delete("/api/notes/:id", function (req, res) {
 
 });
 
+//HTML paths
+// RETURN the contents at `notes.html `
+const notes = app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "./app/public/notes.html"));
+});
 // PATH to index.html 
 app.get("*", function(req, res) {
     //sending a get request to my server to get something at '/'. And i send back an html file
