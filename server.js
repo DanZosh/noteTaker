@@ -24,10 +24,6 @@ app.use(express.static("./app/public"))
 //PATH htmls
 
 
-
-
-
-
 //PATH data
 
 // //START GET REQUEST METHOD 1
@@ -51,10 +47,46 @@ app.get("/api/notes", function (req, res) {
     res.json(notesData)
 });
 
-//POST request
-app.post("/api/notes", function (req, res) {
 
+//POST request
+// //START POST GET REQUEST METHOD 1
+// app.post("/api/notes", function (req, res) {
+
+//     let newNote = req.body;
+// //add a unique id to the newNote
+//     let idVariable = uuidv4();
+//     newNote["id"] = idVariable;
+//     console.log(newNote);
+
+//     //insert my new note into my "database" array
+//     notesData.push(newNote)
+//     //now i need to re-save the updated `notesData` with my `newNote` to my db.json
+//     //this json is a constructor function, its just in all caps
+//     fs.writeFile("./app/data/db/db.json",JSON.stringify(notesData),(err)=>
+//     { 
+//         if (err) {
+//             console.log(err)
+//         }else{ 
+//             console.log("File written successfully\n"); 
+//             //this json is related to express somehow
+//             res.json(notesData)
+//         }
+//     })
+//     return
+// }
+// );
+// //END POST GET REQUEST METHOD 1
+
+//START POST GET REQUEST METHOD 2
+app.post("/api/notes", function (req, res) {
+//Access the POSTed data in `req.body`
     let newNote = req.body;
+        console.log(newNote)
+//Use the fs module to read the file
+    let notesDB = fs.readFileSync('./app/data/db/db.json');
+//THEN parse the file contents with JSON.parse() to the real data
+    let notesData = JSON.parse(notesDB);
+
 //add a unique id to the newNote
     let idVariable = uuidv4();
     newNote["id"] = idVariable;
@@ -77,28 +109,34 @@ app.post("/api/notes", function (req, res) {
     return
 }
 );
-
-
-
+//END POST GET REQUEST METHOD 2
 
 //DELETE request
 app.delete("/api/notes/:id", function (req, res) {
-    console.log(req.params.id)
+    // console.log(req.params.id)
+    let notesDB = fs.readFileSync('./app/data/db/db.json');
+        console.log("notesDB: " + notesDB)
+    let notesData = JSON.parse(notesDB);
+        console.log("notesData: " + notesData)
 
-        //Use the Array.filter() method to filter out the matching element
-        // myArray = myArray.filter(({id}) => id !== req.params.id);
-            let noteID = req.params.id;
-        //     notesData = notesData.filter(
-        //         ({id}) => id !==noteID
-        // )
-            notesData = notesData.filter(
-                ({id}) => id !==noteID
-        )
-        //Return any kind of success message.
-        // res.json({success:true});
-        res.send({message:"Success"})
-        console.log(res)
-
+        let noteID = req.params.id;
+        notesData = notesData.filter(
+            // element => element.id !==noteID
+            //DECONSTRUCT METHOD
+            ({id}) => id !==noteID
+            
+            )
+            console.log(notesData)
+            fs.writeFile("./app/data/db/db.json",JSON.stringify(notesData),(err)=>
+            { 
+                if (err) {
+                    console.log(err)
+                }else{ 
+                    console.log("File written successfully\n"); 
+                    //this json is related to express somehow
+                    res.json(notesData)
+                }
+            })
 
 });
 
